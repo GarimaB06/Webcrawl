@@ -1,12 +1,37 @@
 "use client";
-import React from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import "../globals.css";
 
-const Form = () => {
+const Form: React.FC = () => {
+	const [url, setUrl] = useState<string>("");
+	const [result, setResult] = useState<any | null>(null);
+
+	const handleSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		try {
+			//FIGURE OUT THE END POINT HERE
+			const response = await fetch("", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ url }),
+			});
+			const data = await response.json();
+			setResult(data);
+		} catch (error) {
+			console.log(`Error ${error} occured while fetching the data`);
+		}
+	};
+
+	const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setUrl(e.target.value);
+	};
+
 	return (
-		<form>
-			<input />
-			<button>Submit</button>
+		<form onSubmit={handleSubmit}>
+			<input type="text" value={url} onChange={handleUrlChange} />
+			<button type="submit">Submit</button>
 		</form>
 	);
 };

@@ -1,5 +1,20 @@
 import { SiteMap } from "../../types";
 const puppeteer = require("puppeteer");
+/**
+ *
+ * @param https://www.example.com
+ * @returns example.com
+ */
+
+const exactWebsiteNameWithDotCom = (url: string): string | null => {
+	const pattern = new RegExp("https?://(?:www\\.)?([\\w-]+)\\.com");
+	const match = url.match(pattern);
+	if (match) {
+		return `${match[1]}.com`;
+	} else {
+		return null;
+	}
+};
 
 const webcrawler = async (
 	url: string = "https://www.enki.com"

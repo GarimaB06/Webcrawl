@@ -1,8 +1,13 @@
 import express from "express";
-import { getWebcrawler } from "../controllers/webcrawlerController";
+import {
+	// getWebcrawler,
+	crawlController,
+} from "../controllers/webcrawlerController";
 
 const router = express.Router();
 
-router.get("/", getWebcrawler);
+//Figure out the endpoint here
+// router.get("/", getWebcrawler);
 
+router.post("/", crawlController);
 export default router;

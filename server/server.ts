@@ -7,12 +7,13 @@ const app = express();
 const port = 3001;
 
 app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
 	res.send("Hello, Node.js with TypeScript!");
 });
 
-app.use("/webcrawler", webcrawlerRouter);
+app.use("/", webcrawlerRouter);
 
 app.listen(port, () => {
 	console.log(`Server is running at http://localhost:${port}`);

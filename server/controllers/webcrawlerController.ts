@@ -24,6 +24,7 @@ export const crawlController = async (
 	res: Response
 ): Promise<void> => {
 	try {
+		// console.log(req);
 		const { url } = req.body;
 		const data = await webcrawler(url);
 		if (!res.headersSent) {

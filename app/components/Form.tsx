@@ -10,7 +10,7 @@ const Form: React.FC = () => {
 		e.preventDefault();
 		try {
 			//FIGURE OUT THE END POINT HERE
-			const response = await fetch("", {
+			const response = await fetch("http://localhost:3001/", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

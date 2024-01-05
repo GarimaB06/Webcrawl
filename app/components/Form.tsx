@@ -9,7 +9,6 @@ const Form: React.FC = () => {
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
-			//FIGURE OUT THE END POINT HERE
 			const response = await fetch("http://localhost:3001/", {
 				method: "POST",
 				headers: {

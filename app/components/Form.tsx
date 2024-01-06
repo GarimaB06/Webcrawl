@@ -4,7 +4,7 @@ import "../globals.css";
 
 const Form: React.FC = () => {
 	const [url, setUrl] = useState<string>("");
-	const [result, setResult] = useState<any | null>(null);
+	const [result, setResult] = useState<any | null>();
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -28,10 +28,20 @@ const Form: React.FC = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<input type="text" value={url} onChange={handleUrlChange} />
-			<button type="submit">Submit</button>
-		</form>
+		<>
+			<form onSubmit={handleSubmit}>
+				<input type="text" value={url} onChange={handleUrlChange} />
+				<button type="submit">Submit</button>
+			</form>
+			<div
+				style={{
+					width: "50%",
+					overflowX: "auto",
+				}}
+			>
+				<pre>{JSON.stringify(result, null, 2)}</pre>
+			</div>
+		</>
 	);
 };
 

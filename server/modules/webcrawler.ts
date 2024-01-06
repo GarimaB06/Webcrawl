@@ -3,12 +3,18 @@ import { SiteMap } from "../../types";
 const puppeteer = require("puppeteer");
 
 const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
-	const browser = await puppeteer.launch({ headless: false });
+	const browser = await puppeteer.launch({
+		headless: false,
+		protocolTimeout: 60000,
+		timeout: 120000,
+	});
 	try {
 		const page = await browser.newPage();
+		page.setDefaultNavigationTimeout(120000);
 		const navigate = async (_url: string) => {
 			await page.goto(_url, {
 				waitUntil: "domcontentloaded",
+				timeout: 60000,
 			});
 		};
 		const webSiteDotCom: string = exactWebsiteNameWithDotCom(userInputedUrl);
@@ -40,6 +46,7 @@ const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
 		};
 
 		const visited: Set<string> = new Set();
+
 		const _siteMap: SiteMap = await traverse(
 			userInputedUrl,
 			visited,
@@ -49,7 +56,7 @@ const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
 		);
 		return _siteMap;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		throw error;
 	} finally {
 		await browser.close();
@@ -65,11 +72,7 @@ const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
 const exactWebsiteNameWithDotCom = (url: string): string => {
 	const pattern = new RegExp("https?://(?:www\\.)?([\\w-]+)\\.com");
 	const match = url.match(pattern);
-	if (match) {
-		return `${match[1]}.com`;
-	} else {
-		return "";
-	}
+	return match ? `${match[1]}.com` : "";
 };
 
 /**
@@ -83,8 +86,9 @@ const subUrlRegex = /^\//;
 export const filterLinks = (arrayOfLinks: string[], webSiteDotCom: string) => {
 	return arrayOfLinks.filter((link) => {
 		if (
-			(!link.includes(webSiteDotCom) && !subUrlRegex.test(link)) ||
-			link.includes("mailto:")
+			(!link?.includes(webSiteDotCom) && !subUrlRegex.test(link)) ||
+			link.includes("mailto:") ||
+			link.includes("tel:")
 		) {
 			return false;
 		}
@@ -147,14 +151,19 @@ export const traverse = async (
 		const currentUrl: string | any = queue.shift();
 		if (!visited.has(currentUrl) && isValidURL(currentUrl)) {
 			visited.add(currentUrl);
-			await navigate(currentUrl);
-			const links = await scrapeLinks();
-			const assets = await scrapeStaticAssets();
-			siteMap[currentUrl] = {
-				staticFilesUrls: assets,
-				connectedUrls: removeDuplicates(links),
-			};
-			queue.push(...links);
+			try {
+				await navigate(currentUrl);
+
+				const links = await scrapeLinks();
+				const assets = await scrapeStaticAssets();
+				siteMap[currentUrl] = {
+					staticFilesUrls: assets,
+					connectedUrls: removeDuplicates(links),
+				};
+				queue.push(...links);
+			} catch (error) {
+				console.log(`Error ${error} occured in navigate method`);
+			}
 		}
 	}
 	return siteMap;

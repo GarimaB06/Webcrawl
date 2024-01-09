@@ -23,3 +23,7 @@ export interface PageNode {
 export interface Map {
 	[url: string]: PageNode;
 }
+
+// export interface MyTreeNode {
+// 	name?: string;
+// }

@@ -1,11 +1,10 @@
 "use client";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import "../globals.scss";
-import { raw } from "body-parser";
 import { PageNode } from "@/types";
 import { useEffect } from "react";
 import formatIntoTreeData from "../sitemapUtils";
-import { tree } from "next/dist/build/templates/app-page";
+import TreeVisualization from "./TreeVisualization";
 
 const Form: React.FC = () => {
 	const [url, setUrl] = useState<string>("");
@@ -13,6 +12,10 @@ const Form: React.FC = () => {
 	const [treeData, setTreeData] = useState<PageNode[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<Error | null>(null);
+	const [showTree, setShowTree] = useState<boolean>(false);
+
+	if (error) return <p>{error.toString()}</p>;
+	if (loading) return <p>...Loading</p>;
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -50,18 +53,27 @@ const Form: React.FC = () => {
 
 	return (
 		<>
+			<button onClick={() => setShowTree(!showTree)} style={{ margin: "20px" }}>
+				{showTree
+					? "Click to view site map JSON"
+					: "Click to view site map TREE"}
+			</button>
 			<form onSubmit={handleSubmit}>
 				<input type="text" value={url} onChange={handleUrlChange} />
 				<button type="submit">Submit</button>
 			</form>
-			<div
-				style={{
-					width: "50%",
-					overflowX: "auto",
-				}}
-			>
-				{rawData && <pre>{JSON.stringify(rawData, null, 2)}</pre>}
-			</div>
+			{showTree ? (
+				<TreeVisualization treeData={treeData} />
+			) : (
+				<div
+					style={{
+						width: "50%",
+						overflowX: "auto",
+					}}
+				>
+					{rawData && <pre>{JSON.stringify(rawData, null, 2)}</pre>}
+				</div>
+			)}
 		</>
 	);
 };

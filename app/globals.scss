@@ -1,3 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800&display=swap");
+
+$logoColor: #545454;
+
 body {
 	font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
 		"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -8,6 +12,13 @@ body {
 	margin: 50px;
 }
 
+h1 {
+	font-family: "League Spartan", sans-serif;
+	font-weight: 400;
+	font-size: 90px;
+	color: $logoColor;
+	letter-spacing: -5px;
+}
 p {
 	color: gray;
 	line-height: 5%;
@@ -15,7 +26,7 @@ p {
 input {
 	padding: 10px;
 	border: 1px lightgray solid;
-	color: white;
+	color: black;
 	font-weight: 900;
 	border-radius: 10px;
 	width: 500px;

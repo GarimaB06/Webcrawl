@@ -1,10 +1,18 @@
 "use client";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import "../globals.css";
+import "../globals.scss";
+import { raw } from "body-parser";
+import { PageNode } from "@/types";
+import { useEffect } from "react";
+import formatIntoTreeData from "../sitemapUtils";
+import { tree } from "next/dist/build/templates/app-page";
 
 const Form: React.FC = () => {
 	const [url, setUrl] = useState<string>("");
-	const [result, setResult] = useState<any | null>();
+	const [rawData, setRawData] = useState<any | null>(null);
+	const [treeData, setTreeData] = useState<PageNode[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [error, setError] = useState<Error | null>(null);
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -17,7 +25,7 @@ const Form: React.FC = () => {
 				body: JSON.stringify({ url }),
 			});
 			const data = await response.json();
-			setResult(data);
+			setRawData(data);
 		} catch (error) {
 			console.log(`Error ${error} occured while fetching the data`);
 		}
@@ -26,6 +34,19 @@ const Form: React.FC = () => {
 	const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setUrl(e.target.value);
 	};
+
+	useEffect(() => {
+		if (rawData) {
+			const { data } = rawData;
+			const formattedData: PageNode[] = formatIntoTreeData({
+				data,
+				root: url,
+			});
+			setTreeData(formattedData);
+		}
+	}, [rawData]);
+
+	console.log("TREE DATA", treeData);
 
 	return (
 		<>
@@ -39,7 +60,7 @@ const Form: React.FC = () => {
 					overflowX: "auto",
 				}}
 			>
-				<pre>{JSON.stringify(result, null, 2)}</pre>
+				{rawData && <pre>{JSON.stringify(rawData, null, 2)}</pre>}
 			</div>
 		</>
 	);

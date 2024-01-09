@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Form from "./components/Form";
-import "./globals.css";
+import "./globals.scss";
 export const metadata: Metadata = {
 	title: "Webcrawl",
 	description: "Visualize your web crawled data",
@@ -14,7 +14,7 @@ export default function RootLayout({
 	return (
 		<html>
 			<body>
-				<h1>Welcome to Webcrawl</h1>
+				<h1>Webcrawl</h1>
 				<p>Enter your website URL</p>
 				<p>Required Format: https://www.example.com</p>
 				<Form />

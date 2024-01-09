@@ -7,7 +7,7 @@ export interface SiteMap {
 
 export interface ScrapedData {
 	data: SiteMap;
-	root?: string;
+	root: string;
 }
 
 interface Attributes {

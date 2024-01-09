@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import { SiteMap } from "../../types";
 const puppeteer = require("puppeteer");
 

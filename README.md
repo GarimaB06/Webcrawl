@@ -1,8 +1,7 @@
 # Webcrawl
-![Screenshot 2024-01-10 at 1 08 16 AM](https://github.com/GarimaB06/Webcrawl/assets/68969765/5bc8d31e-09b4-46ed-823a-70c02a57752e)
 
 Webcrawl is a web crawling tool built with Typescript, Next.js, React Hooks, Node.js, Express, D3, Puppeteer, and SASS. It allows you to input a URL of the website you'd like to crawl and visualize the crawled links in both JSON and a D3 tree.
-
+![Screenshot 2024-01-10 at 1 21 45 AM](https://github.com/GarimaB06/Webcrawl/assets/68969765/515e8581-d73b-41ab-9345-8ee8ca5723bd)
 ## Features
 
 - **Web Crawling:** Enter the URL of the website you want to crawl, and Webcrawl will fetch and organize the links.

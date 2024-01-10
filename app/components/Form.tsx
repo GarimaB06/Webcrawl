@@ -50,6 +50,12 @@ const Form: React.FC = () => {
 		setShowTree((prevShowTree) => !prevShowTree);
 	};
 
+	const resetDisplay = () => {
+		setRawData(null);
+		setUrl("");
+		setLoading(false);
+	};
+
 	useEffect(() => {
 		if (rawData) {
 			setTreeData(formatIntoTreeData({ data: rawData.data, root: url }));
@@ -67,6 +73,7 @@ const Form: React.FC = () => {
 							? "Click to view site map JSON"
 							: "Click to view site map TREE"}
 					</button>
+					<button onClick={resetDisplay}>Crawl a different website</button>
 
 					{showTree ? (
 						<div className="tree-display-container">
@@ -80,8 +87,26 @@ const Form: React.FC = () => {
 				</div>
 			) : (
 				<form onSubmit={handleSubmit}>
-					<input type="text" value={url} onChange={handleUrlChange} />
-					<button type="submit">Submit</button>
+					<input
+						type="text"
+						value={url}
+						onChange={handleUrlChange}
+						disabled={loading}
+						style={{
+							backgroundColor: loading ? "#eee" : "white",
+							color: loading ? "lightGrey" : "black",
+						}}
+					/>
+					<button
+						type="submit"
+						disabled={loading}
+						style={{
+							backgroundColor: loading ? "darkgrey" : "lightgrey",
+							color: loading ? "#888" : "black",
+						}}
+					>
+						Submit
+					</button>
 				</form>
 			)}
 		</>

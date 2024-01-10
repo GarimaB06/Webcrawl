@@ -1,12 +1,16 @@
-import { ScrapedData } from "@/types";
-import React, { useState, useEffect } from "react";
 import Tree from "react-d3-tree";
 
-const customNodeRenderer = ({ nodeDatum, toggleNode }) => (
-	<g onClick={() => toggleNode()}>
+const customNodeRenderer = ({
+	nodeDatum,
+	toggleNode,
+}: {
+	nodeDatum: any;
+	toggleNode: any;
+}) => (
+	<g onClick={() => toggleNode()} style={{ margin: "100px" }}>
 		<circle r={31} />
 		<text
-			textAnchor="middle"
+			textAnchor="left"
 			dy="-55"
 			style={{ fill: "black", fontSize: "25px" }}
 		>
@@ -15,33 +19,32 @@ const customNodeRenderer = ({ nodeDatum, toggleNode }) => (
 	</g>
 );
 
-const TreeVisualization = ({ treeData }) => {
-	const [zoomedOut, setZoomedOut] = useState(false);
-
-	useEffect(() => {
-		setZoomedOut(true);
-	}, []); // Only run this effect once on mount
-
+const TreeVisualization: React.FC<{
+	treeData: any;
+}> = ({ treeData }) => {
 	return (
 		<div
 			style={{
-				width: "100%",
+				width: "80%",
 				height: "200vh",
 				overflow: "hidden", // Hide overflow to prevent scrollbars during animation
+				backgroundColor: "#e4e4e4",
 			}}
 		>
 			{treeData.length > 0 && (
-				<Tree
-					data={treeData}
-					orientation="horizontal"
-					pathFunc="diagonal"
-					translate={{ x: window.innerWidth / 2, y: window.innerHeight / 2 }}
-					separation={{ siblings: 1, nonSiblings: 3 }}
-					nodeSize={{ x: 2500, y: 180 }}
-					renderCustomNodeElement={customNodeRenderer}
-					zoom={zoomedOut ? 0.02 : 1} // Adjust the zoom level as needed
-					zoomable={true}
-				/>
+				<>
+					<Tree
+						data={treeData}
+						orientation="horizontal"
+						pathFunc="diagonal"
+						translate={{ x: 0, y: window.innerHeight / 2 }}
+						separation={{ siblings: 1, nonSiblings: 3 }}
+						nodeSize={{ x: 4000, y: 180 }}
+						renderCustomNodeElement={customNodeRenderer}
+						zoom={0.1}
+						zoomable={true}
+					/>
+				</>
 			)}
 		</div>
 	);

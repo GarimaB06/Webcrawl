@@ -1,6 +1,6 @@
 export interface SiteMap {
 	[url: string]: {
-		staticFilesUrls: string[];
+		staticFilesUrls?: string[];
 		connectedUrls: string[];
 	};
 }
@@ -24,6 +24,4 @@ export interface Map {
 	[url: string]: PageNode;
 }
 
-// export interface MyTreeNode {
-// 	name?: string;
-// }
+export interface TreeData {}

@@ -58,21 +58,23 @@ const Form: React.FC = () => {
 					? "Click to view site map JSON"
 					: "Click to view site map TREE"}
 			</button>
-			<form onSubmit={handleSubmit}>
-				<input type="text" value={url} onChange={handleUrlChange} />
-				<button type="submit">Submit</button>
-			</form>
 			{showTree ? (
 				<TreeVisualization treeData={treeData} />
 			) : (
-				<div
-					style={{
-						width: "50%",
-						overflowX: "auto",
-					}}
-				>
-					{rawData && <pre>{JSON.stringify(rawData, null, 2)}</pre>}
-				</div>
+				<>
+					<form onSubmit={handleSubmit}>
+						<input type="text" value={url} onChange={handleUrlChange} />
+						<button type="submit">Submit</button>
+					</form>
+					<div
+						style={{
+							width: "50%",
+							overflowX: "auto",
+						}}
+					>
+						{rawData && <pre>{JSON.stringify(rawData, null, 2)}</pre>}
+					</div>
+				</>
 			)}
 		</>
 	);

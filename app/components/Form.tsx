@@ -1,4 +1,5 @@
 "use client";
+
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import "../globals.scss";
 import { PageNode } from "@/types";
@@ -11,14 +12,10 @@ const Form: React.FC = () => {
 	const [rawData, setRawData] = useState<any | null>(null);
 	const [treeData, setTreeData] = useState<PageNode[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<Error | null>(null);
+	const [error, setError] = useState<string | null>(null);
 	const [showTree, setShowTree] = useState<boolean>(false);
 
-	if (error) return <p>{error.toString()}</p>;
-	if (loading) return <p>...Loading</p>;
-
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
+	const fetchData = async () => {
 		try {
 			const response = await fetch("http://localhost:3001/", {
 				method: "POST",
@@ -29,52 +26,63 @@ const Form: React.FC = () => {
 			});
 			const data = await response.json();
 			setRawData(data);
-		} catch (error) {
-			console.log(`Error ${error} occured while fetching the data`);
+			setTreeData(formatIntoTreeData({ data: data.data, root: url }));
+			setLoading(false);
+		} catch (error: any) {
+			setError(error.toString());
+			setLoading(false);
+			console.log(`Error ${error} occurred while fetching the data`);
 		}
+	};
+
+	const handleSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+		setError(null);
+		fetchData();
 	};
 
 	const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setUrl(e.target.value);
 	};
 
+	const toggleView = () => {
+		setShowTree((prevShowTree) => !prevShowTree);
+	};
+
 	useEffect(() => {
 		if (rawData) {
-			const { data } = rawData;
-			const formattedData: PageNode[] = formatIntoTreeData({
-				data,
-				root: url,
-			});
-			setTreeData(formattedData);
+			setTreeData(formatIntoTreeData({ data: rawData.data, root: url }));
 		}
-	}, [rawData]);
-
-	console.log("TREE DATA", treeData);
+	}, [rawData, url]);
 
 	return (
 		<>
-			<button onClick={() => setShowTree(!showTree)} style={{ margin: "20px" }}>
-				{showTree
-					? "Click to view site map JSON"
-					: "Click to view site map TREE"}
-			</button>
-			{showTree ? (
-				<TreeVisualization treeData={treeData} />
+			{loading && <p>...Loading</p>}
+			{error && <p>Error: {error}</p>}
+			{rawData ? (
+				<div className="data-display-container">
+					<button onClick={toggleView} style={{ margin: "20px" }}>
+						{showTree
+							? "Click to view site map JSON"
+							: "Click to view site map TREE"}
+					</button>
+
+					{showTree ? (
+						<div className="tree-display-container">
+							<TreeVisualization treeData={treeData} />
+						</div>
+					) : (
+						<div className="json-div">
+							<pre>{JSON.stringify(rawData, null, 2)}</pre>
+						</div>
+					)}
+				</div>
 			) : (
-				<>
-					<form onSubmit={handleSubmit}>
-						<input type="text" value={url} onChange={handleUrlChange} />
-						<button type="submit">Submit</button>
-					</form>
-					<div
-						style={{
-							width: "50%",
-							overflowX: "auto",
-						}}
-					>
-						{rawData && <pre>{JSON.stringify(rawData, null, 2)}</pre>}
-					</div>
-				</>
+				<form onSubmit={handleSubmit}>
+					<input type="text" value={url} onChange={handleUrlChange} />
+					<button type="submit">Submit</button>
+				</form>
 			)}
 		</>
 	);

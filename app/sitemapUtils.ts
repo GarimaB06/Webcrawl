@@ -1,11 +1,12 @@
 import { SiteMap, Map, PageNode, ScrapedData } from "../types";
 
 const exactWebsiteNameWithDotCom = (url: string): string => {
-	const pattern = new RegExp("https?://(?:www\\.)?([\\w-]+)\\.com");
+	const pattern = new RegExp(
+		"https?://(?:www\\.)?([\\w-]+)\\.(com|org|one|io|gov|dev)"
+	);
 	const match = url.match(pattern);
-	return match ? `${match[1]}.com` : "";
+	return match ? `${match[1]}.${match[2]}` : "";
 };
-
 const formatIntoTreeData = ({ data, root }: ScrapedData) => {
 	const formattedRootUrl = exactWebsiteNameWithDotCom(root);
 	const processedSet: Set<string> = new Set();
@@ -63,8 +64,11 @@ const processChildren = (rootNode: PageNode, map: Map) => {
 const processPage = (url: string, siteMapData: SiteMap): PageNode => {
 	const obj: PageNode = { name: url };
 	if (siteMapData[url]) {
-		const { staticFilesUrls, connectedUrls } = siteMapData[url];
-		obj.attributes = { staticFilesUrls };
+		const {
+			// staticFilesUrls,
+			connectedUrls,
+		} = siteMapData[url];
+		// obj.attributes = { staticFilesUrls };
 		obj.children =
 			connectedUrls?.map((child) => {
 				return { name: child };

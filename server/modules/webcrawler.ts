@@ -4,7 +4,7 @@ const puppeteer = require("puppeteer");
 const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
 	const browser = await puppeteer.launch({
 		headless: false,
-		protocolTimeout: 60000,
+		protocolTimeout: 12000,
 		timeout: 120000,
 	});
 	try {
@@ -13,7 +13,7 @@ const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
 		const navigate = async (_url: string) => {
 			await page.goto(_url, {
 				waitUntil: "domcontentloaded",
-				timeout: 60000,
+				timeout: 12000,
 			});
 		};
 		const webSiteDotCom: string = exactWebsiteNameWithDotCom(userInputedUrl);
@@ -47,11 +47,11 @@ const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
 		const visited: Set<string> = new Set();
 
 		const _siteMap: SiteMap = await traverse(
-			userInputedUrl,
+			`https://${webSiteDotCom}`,
 			visited,
 			navigate,
-			scrapeLinks,
-			scrapeStaticAssets
+			scrapeLinks
+			// scrapeStaticAssets
 		);
 		return _siteMap;
 	} catch (error) {
@@ -69,9 +69,11 @@ const webcrawler = async (userInputedUrl: string): Promise<SiteMap> => {
  */
 
 const exactWebsiteNameWithDotCom = (url: string): string => {
-	const pattern = new RegExp("https?://(?:www\\.)?([\\w-]+)\\.com");
+	const pattern = new RegExp(
+		"https?://(?:www\\.)?([\\w-]+)\\.(com|org|one|io|gov|dev)"
+	);
 	const match = url.match(pattern);
-	return match ? `${match[1]}.com` : "";
+	return match ? `${match[1]}.${match[2]}` : "";
 };
 
 /**
@@ -98,7 +100,6 @@ export const filterLinks = (arrayOfLinks: string[], webSiteDotCom: string) => {
 /**
  * FORMAT LINKS FUNCTION
  * This function is meant to normalize scraped links to be a standardized format with "https://www." prepended
- * If a link does not have enki.com, we will prepend 'https://enki.com'
  * If a link does not have 'https:' prefix we will prepend or replace with 'https:'
  *  */
 
@@ -140,8 +141,8 @@ export const traverse = async (
 	userInputedUrl: string,
 	visited: Set<string>,
 	navigate: (urlToNavigateTo: string) => Promise<void>,
-	scrapeLinks: () => Promise<string[]>,
-	scrapeStaticAssets: () => Promise<string[]>
+	scrapeLinks: () => Promise<string[]>
+	// scrapeStaticAssets: () => Promise<string[]>
 ): Promise<SiteMap> => {
 	const siteMap: SiteMap = {};
 	const queue: string[] = [userInputedUrl];
@@ -154,9 +155,9 @@ export const traverse = async (
 				await navigate(currentUrl);
 
 				const links = await scrapeLinks();
-				const assets = await scrapeStaticAssets();
+				// const assets = await scrapeStaticAssets();
 				siteMap[currentUrl] = {
-					staticFilesUrls: assets,
+					// staticFilesUrls: assets,
 					connectedUrls: removeDuplicates(links),
 				};
 				queue.push(...links);

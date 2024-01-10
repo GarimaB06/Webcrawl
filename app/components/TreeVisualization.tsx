@@ -1,5 +1,5 @@
 import Tree from "react-d3-tree";
-
+import "../globals.scss";
 const customNodeRenderer = ({
 	nodeDatum,
 	toggleNode,
@@ -7,13 +7,9 @@ const customNodeRenderer = ({
 	nodeDatum: any;
 	toggleNode: any;
 }) => (
-	<g onClick={() => toggleNode()} style={{ margin: "100px" }}>
+	<g onClick={() => toggleNode()} className="toggle-node">
 		<circle r={31} />
-		<text
-			textAnchor="left"
-			dy="-55"
-			style={{ fill: "black", fontSize: "25px" }}
-		>
+		<text textAnchor="left" dy="-55" className="circle-label">
 			{nodeDatum.name}
 		</text>
 	</g>
@@ -23,14 +19,7 @@ const TreeVisualization: React.FC<{
 	treeData: any;
 }> = ({ treeData }) => {
 	return (
-		<div
-			style={{
-				width: "80%",
-				height: "200vh",
-				overflow: "hidden", // Hide overflow to prevent scrollbars during animation
-				backgroundColor: "#e4e4e4",
-			}}
-		>
+		<>
 			{treeData.length > 0 && (
 				<>
 					<Tree
@@ -46,7 +35,7 @@ const TreeVisualization: React.FC<{
 					/>
 				</>
 			)}
-		</div>
+		</>
 	);
 };
 

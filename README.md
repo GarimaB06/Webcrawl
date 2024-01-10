@@ -25,7 +25,7 @@ Webcrawl is a web crawling tool built with Typescript, Next.js, React Hooks, Nod
 ## How to Use
 
 1. **Installation:**
-   - Clone the repository: `git clone https://github.com/your-username/webcrawl.git`
+   - Clone the repository: `https://github.com/GarimaB06/Webcrawl.git`
    - Install dependencies:
      `npm install`
      

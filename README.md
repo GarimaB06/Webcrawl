@@ -61,3 +61,8 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+##Authors 
+
+[Garima Bhatia](https://www.linkedin.com/in/garimab06/) 
+
